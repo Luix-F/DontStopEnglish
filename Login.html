@@ -1,0 +1,406 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>elo Portal do Aluno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Layout concept: split-screen auth — quiet form panel on the left,
+     a dark "language bubbles" showcase panel on the right. */
+  :root{
+    --bg-left:#f7f6f1;
+    --bg-right:#0d3b2e;
+    --text-dark:#141a2e;
+    --text-gray:#6b7280;
+    --input-bg:#eef2f8;
+    --accent-lime:#cdf07a;
+    --accent-lime-text:#2c4008;
+    --accent-pink:#f1d6f4;
+    --accent-pink-text:#6a2f72;
+    --accent-tan:#f6e0a6;
+    --accent-tan-text:#6e4608;
+    --label-light:#b7e36a;
+    --on-dark:#ffffff;
+    --on-dark-soft:rgba(255,255,255,0.75);
+    color-scheme: light;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    font-family:'Poppins', Arial, sans-serif;
+    color:var(--text-dark);
+    background:var(--bg-left);
+    margin:0;
+  }
+
+  .page{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    min-height:100vh;
+  }
+
+  /* LEFT PANEL */
+  .left{
+    background:var(--bg-left);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:40px;
+    padding-block:48px;
+    padding-left:max(48px, env(safe-area-inset-left, 0px));
+    padding-right:max(48px, env(safe-area-inset-right, 0px));
+  }
+
+  .logo-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .logo-icon{
+    width:24px;
+    height:24px;
+    color:var(--bg-right);
+    flex-shrink:0;
+  }
+
+  .logo-text{
+    font-size:24px;
+    font-weight:800;
+    color:var(--text-dark);
+  }
+
+  .portal-label{
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    color:var(--text-gray);
+    text-transform:uppercase;
+  }
+
+  .form-area{
+    max-width:420px;
+    width:100%;
+    margin:0 auto;
+  }
+
+  .eyebrow{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.1em;
+    color:var(--text-gray);
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+
+  h1{
+    font-size:clamp(28px, 4vw, 40px);
+    font-weight:700;
+    line-height:1.2;
+    color:var(--text-dark);
+    margin:0 0 16px;
+    text-wrap:balance;
+  }
+
+  .subtitle{
+    font-size:15px;
+    color:var(--text-gray);
+    margin:0 0 32px;
+  }
+
+  label{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text-dark);
+    margin-bottom:8px;
+  }
+
+  .field{ margin-bottom:18px; }
+
+  input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:8px;
+    border:1px solid transparent;
+    background:var(--input-bg);
+    font-size:14px;
+    font-family:inherit;
+    color:var(--text-dark);
+  }
+
+  input:focus{
+    outline:2px solid var(--bg-right);
+    outline-offset:1px;
+  }
+
+  input::placeholder{ color:#9aa3b2; }
+
+  .forgot-row{
+    display:flex;
+    justify-content:flex-end;
+    margin:-6px 0 24px;
+  }
+
+  .forgot-row a{
+    font-size:13px;
+    color:var(--text-dark);
+    text-decoration:none;
+    opacity:0.75;
+  }
+
+  .btn-primary{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:8px;
+    background:var(--bg-right);
+    color:var(--on-dark);
+    font-size:15px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+  }
+
+  .btn-primary:hover{ opacity:0.92; }
+
+  .signup-row{
+    text-align:center;
+    margin-top:22px;
+    font-size:13px;
+    color:var(--text-gray);
+  }
+
+  .signup-row a{
+    color:var(--text-dark);
+    font-weight:600;
+    text-decoration:underline;
+  }
+
+  .left-footer{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    font-size:12px;
+    color:var(--text-gray);
+  }
+
+  .left-footer a{
+    color:var(--text-gray);
+    text-decoration:none;
+  }
+
+  /* RIGHT PANEL */
+  .right{
+    background:var(--bg-right);
+    color:var(--on-dark);
+    padding-block:48px;
+    padding-left:max(48px, env(safe-area-inset-left, 0px));
+    padding-right:max(48px, env(safe-area-inset-right, 0px));
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:28px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .right-top .eyebrow-light{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--label-light);
+    margin-bottom:18px;
+  }
+
+  .right h2{
+    font-size:clamp(26px, 3.4vw, 44px);
+    font-weight:700;
+    line-height:1.18;
+    margin:0 0 20px;
+    text-wrap:balance;
+  }
+
+  .right-top p{
+    font-size:15px;
+    line-height:1.6;
+    color:var(--on-dark-soft);
+    max-width:420px;
+    margin:0;
+  }
+
+  .bubbles{
+    position:relative;
+    min-height:280px;
+  }
+
+  .bubble{
+    position:absolute;
+    border-radius:18px;
+    padding:20px 24px;
+    max-width:260px;
+  }
+
+  .bubble .tag{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:8px;
+    display:block;
+  }
+
+  .bubble .word{
+    font-size:28px;
+    font-weight:700;
+    line-height:1;
+  }
+
+  .bubble.en{
+    background:var(--accent-lime);
+    color:var(--accent-lime-text);
+    top:0;
+    left:0;
+    width:250px;
+  }
+
+  .bubble.es{
+    background:var(--accent-pink);
+    color:var(--accent-pink-text);
+    top:50px;
+    left:270px;
+    width:240px;
+  }
+
+  .bubble.fr{
+    background:var(--accent-tan);
+    color:var(--accent-tan-text);
+    top:160px;
+    left:25px;
+    width:290px;
+  }
+
+  .right-bottom .eyebrow-light{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--label-light);
+    margin-bottom:8px;
+  }
+
+  .right-bottom p{
+    font-size:14px;
+    color:var(--on-dark-soft);
+    margin:0;
+  }
+
+  @media (max-width: 900px){
+    .page{ grid-template-columns: 1fr; }
+    .right{ order:-1; min-height:460px; }
+    .left{ padding-top:36px; }
+    h1{ font-size:28px; }
+    .bubbles{ min-height:260px; }
+    .bubble{ max-width:220px; padding:16px 18px; }
+    .bubble .word{ font-size:24px; }
+    .bubble.es{ left:150px; }
+    .bubble.fr{ left:0; top:180px; width:260px; }
+  }
+
+  @media (max-width: 480px){
+    .left, .right{ padding-left:max(24px, env(safe-area-inset-left, 0px)); padding-right:max(24px, env(safe-area-inset-right, 0px)); }
+    .bubble.es{ left:0; top:140px; }
+    .bubble.fr{ top:260px; }
+    .bubbles{ min-height:360px; }
+  }
+</style>
+
+<div class="page">
+
+  <!-- LEFT: LOGIN -->
+  <div class="left">
+    <div class="logo-row">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/>
+      </svg>
+      <span class="logo-text">elo</span>
+      <span class="portal-label">Portal do Aluno</span>
+    </div>
+
+    <div class="form-area">
+      <div class="eyebrow">Bom ter você por aqui</div>
+      <h1>Seu próximo passo começa aqui.</h1>
+      <p class="subtitle">Entre para continuar aprendendo, no seu ritmo.</p>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label for="senha">Senha</label>
+          <input id="senha" name="senha" type="password" placeholder="Sua senha" autocomplete="current-password">
+        </div>
+
+        <div class="forgot-row">
+          <a href="#">Esqueci minha senha</a>
+        </div>
+
+        <button class="btn-primary" type="submit">Entrar na plataforma</button>
+      </form>
+
+      <div class="signup-row">
+        Primeiro acesso? <a href="#">Fale com a sua escola</a>
+      </div>
+    </div>
+
+    <div class="left-footer">
+      <span>© 2026 elo • Aprender aproxima.</span>
+      <a href="#">Precisa de ajuda?</a>
+    </div>
+  </div>
+
+  <!-- RIGHT: SHOWCASE -->
+  <div class="right">
+    <div class="right-top">
+      <div class="eyebrow-light">Um idioma. Infinitas possibilidades.</div>
+      <h2>Aprenda hoje.<br>Conecte-se<br>com o mundo.</h2>
+      <p>Suas aulas, suas conquistas e todos os materiais em um só lugar. Vamos mais longe, juntos.</p>
+    </div>
+
+    <div class="bubbles" aria-hidden="true">
+      <div class="bubble en">
+        <span class="tag">Inglês</span>
+        <span class="word">Hello.</span>
+      </div>
+      <div class="bubble es">
+        <span class="tag">Espanhol</span>
+        <span class="word">¡Hola!</span>
+      </div>
+      <div class="bubble fr">
+        <span class="tag">Francês</span>
+        <span class="word">Bonjour.</span>
+      </div>
+    </div>
+
+    <div class="right-bottom">
+      <div class="eyebrow-light">Cada aula é uma nova conexão.</div>
+      <p>Seu futuro fala todos os idiomas.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById('login-form').addEventListener('submit', function(e){
+    e.preventDefault();
+  });
+</script>
+
+</body></html>
